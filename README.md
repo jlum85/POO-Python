@@ -11,7 +11,7 @@ Lorsque le programme se lance, une première fenêtre affiche un graphique conce
 
 ## pour installer matplotlib
 
-ajouter scrapy dans requirements.txt puis lancer :
+ajouter matplotlib dans requirements.txt puis lancer :
 
 ```bash
 python3 -m pip install -r requirements.txt;

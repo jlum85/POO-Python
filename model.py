@@ -16,8 +16,15 @@ class Agent:
 
 class Position:
     def __init__(self, longitude_degrees, latitude_degrees):
-        self.latitude_degrees = latitude_degrees
+        # We store the degree values, but we will be mostly using radians
+        # because they are much more convenient for computation purposes.
+
+        # assert : Lève une exception si renvoie False
+        assert -180 <= longitude_degrees <= 180
         self.longitude_degrees = longitude_degrees
+
+        assert -90 <= latitude_degrees <= 90
+        self.latitude_degrees = latitude_degrees
 
     @property
     def longitude(self):
@@ -31,8 +38,14 @@ class Position:
 
 
 class Zone:
-
+    """
+    A rectangular geographic area bounded by two corners. The corners can
+    be top-left and bottom right, or top-right and bottom-left so you should be
+    careful when computing the distances between them.
+    """
     ZONES = []
+
+    # Attributs de classe (constante si hors de la classe) car on fait cls.WIDTH_DEGREES
     MIN_LONGITUDE_DEGREES = -180
     MAX_LONGITUDE_DEGREES = 180
     MIN_LATITUDE_DEGREES = -90
@@ -41,6 +54,7 @@ class Zone:
     HEIGHT_DEGREES = 1  # degrees of
     EARTH_RADIUS_KILOMETERS = 6371
 
+    # S'il y a un attribut d'instance, il va dans __init__
     def __init__(self, corner1, corner2):
         self.corner1 = corner1
         self.corner2 = corner2
@@ -52,6 +66,8 @@ class Zone:
 
     @property
     def width(self):
+        # Note that here we access the class attribute via "self" and it
+        # doesn't make any difference
         return abs(self.corner1.longitude - self.corner2.longitude) * self.EARTH_RADIUS_KILOMETERS
 
     @property
@@ -78,6 +94,7 @@ class Zone:
         self.inhabitants.append(inhabitant)
 
     def contains(self, position):
+        """Return True if the zone contains this position"""
         return position.longitude >= min(self.corner1.longitude, self.corner2.longitude) and \
             position.longitude < max(self.corner1.longitude, self.corner2.longitude) and \
             position.latitude >= min(self.corner1.latitude, self.corner2.latitude) and \
@@ -142,7 +159,9 @@ class BaseGraph:
 class AgreeablenessGraph(BaseGraph):
 
     def __init__(self):
-        super().__init__()
+        # Call base constructor
+        super(AgreeablenessGraph, self).__init__()
+        # super().__init__()
         self.title = "Nice people live in the countryside"
         self.x_label = "population density"
         self.y_label = "agreeableness"
